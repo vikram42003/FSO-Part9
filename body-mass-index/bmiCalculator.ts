@@ -20,4 +20,17 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 };
 
-console.log(calculateBmi(180, 65));
+try {
+  const h = Number(process.argv[2]);
+  const w = Number(process.argv[3]);
+
+  if (process.argv.length != 4 || Number.isNaN(h) || Number.isNaN(w)) {
+    throw new Error(
+      "Invalid arguments. The arguments should be 'npm run calculateBmi <height> <weight>' and nothing else"
+    );
+  }
+
+  console.log(calculateBmi(h, w));
+} catch (e) {
+  console.log(e);
+}

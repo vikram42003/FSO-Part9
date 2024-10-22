@@ -12,9 +12,8 @@ const calculateExercises = (hoursArray: number[], dailyTarget: number): exercise
   const data: exerciseData = {} as exerciseData;
 
   data.periodLength = hoursArray.length;
-  data.success = true;
-  data.target = dailyTarget;
   data.trainingDays = 0;
+  data.success = true;
 
   for (const hour of hoursArray) {
     if (hour > 0) {
@@ -37,9 +36,25 @@ const calculateExercises = (hoursArray: number[], dailyTarget: number): exercise
     data.ratingDescription = "you can do better";
   }
 
+  data.target = dailyTarget;
   data.average = hoursArray.reduce((acc, curr) => acc + curr) / hoursArray.length;
 
   return data;
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  if (process.argv.length < 4) {
+    throw new Error("please provide the target value and hours array delimited by space");
+  }
+
+  const target = Number(process.argv[2]);
+  const hoursArray = process.argv.slice(3).map(Number);
+
+  if (Number.isNaN(target) || hoursArray.some(isNaN)) {
+    throw new Error("the arguments can only be numbers");
+  }
+
+  console.log(calculateExercises(hoursArray, target));
+} catch (e) {
+  console.log(e);
+}
