@@ -1,4 +1,4 @@
-interface exerciseData {
+export interface ExerciseData {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -8,8 +8,8 @@ interface exerciseData {
   average: number;
 }
 
-export const calculateExercises = (hoursArray: number[], dailyTarget: number): exerciseData => {
-  const data: exerciseData = {} as exerciseData;
+export const calculateExercises = (hoursArray: number[], dailyTarget: number): ExerciseData => {
+  const data: ExerciseData = {} as ExerciseData;
 
   data.periodLength = hoursArray.length;
   data.trainingDays = 0;
@@ -42,19 +42,21 @@ export const calculateExercises = (hoursArray: number[], dailyTarget: number): e
   return data;
 };
 
-try {
-  if (process.argv.length < 4) {
-    throw new Error("please provide the target value and hours array delimited by space");
+if (require.main === module) {
+  try {
+    if (process.argv.length < 4) {
+      throw new Error("please provide the target value and hours array delimited by space");
+    }
+
+    const target = Number(process.argv[2]);
+    const hoursArray = process.argv.slice(3).map(Number);
+
+    if (Number.isNaN(target) || hoursArray.some(isNaN)) {
+      throw new Error("the arguments can only be numbers");
+    }
+
+    console.log(calculateExercises(hoursArray, target));
+  } catch (e) {
+    console.log(e);
   }
-
-  const target = Number(process.argv[2]);
-  const hoursArray = process.argv.slice(3).map(Number);
-
-  if (Number.isNaN(target) || hoursArray.some(isNaN)) {
-    throw new Error("the arguments can only be numbers");
-  }
-
-  console.log(calculateExercises(hoursArray, target));
-} catch (e) {
-  console.log(e);
 }
