@@ -1,4 +1,4 @@
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
   const bmi = Number((weight / ((height / 100) * (height / 100))).toFixed(1));
 
   if (bmi < 16.0) {
@@ -20,17 +20,19 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 };
 
-try {
-  const h = Number(process.argv[2]);
-  const w = Number(process.argv[3]);
+if (require.main === module) {
+  try {
+    const h = Number(process.argv[2]);
+    const w = Number(process.argv[3]);
 
-  if (process.argv.length != 4 || Number.isNaN(h) || Number.isNaN(w)) {
-    throw new Error(
-      "Invalid arguments. The arguments should be 'npm run calculateBmi <height> <weight>' and nothing else"
-    );
+    if (process.argv.length != 4 || Number.isNaN(h) || Number.isNaN(w)) {
+      throw new Error(
+        "Invalid arguments. The arguments should be 'npm run calculateBmi <height> <weight>' and nothing else"
+      );
+    }
+
+    console.log(calculateBmi(h, w));
+  } catch (e) {
+    console.log(e);
   }
-
-  console.log(calculateBmi(h, w));
-} catch (e) {
-  console.log(e);
 }

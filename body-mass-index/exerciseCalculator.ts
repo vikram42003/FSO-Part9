@@ -8,7 +8,7 @@ interface exerciseData {
   average: number;
 }
 
-const calculateExercises = (hoursArray: number[], dailyTarget: number): exerciseData => {
+export const calculateExercises = (hoursArray: number[], dailyTarget: number): exerciseData => {
   const data: exerciseData = {} as exerciseData;
 
   data.periodLength = hoursArray.length;
