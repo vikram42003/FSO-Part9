@@ -1,19 +1,15 @@
-interface CoursePartInfo {
-  name: string;
-  exerciseCount: number;
-}
+import { CoursePart } from "../../App";
+import Part from "./Part";
 
 interface ContentProps {
-  courseParts: CoursePartInfo[];
+  courseParts: CoursePart[];
 }
 
 const Content = ({ courseParts }: ContentProps) => {
   return (
     <div>
       {courseParts.map((c) => (
-        <p key={c.name}>
-          {c.name} {c.exerciseCount}
-        </p>
+        <Part key={c.name} part={c} />
       ))}
     </div>
   );
