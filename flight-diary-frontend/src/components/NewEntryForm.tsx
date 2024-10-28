@@ -1,12 +1,14 @@
 import { SyntheticEvent, useState } from "react";
 import diaryEntryService from "../services/diaryEntryService";
 import { Entry } from "../types";
+import { AxiosError } from "axios";
 
 interface NewEntryFormProps {
   setEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
+  setNotif: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const NewEntryForm = ({ setEntries }: NewEntryFormProps) => {
+const NewEntryForm = ({ setEntries, setNotif }: NewEntryFormProps) => {
   const [date, setDate] = useState<string>("");
   const [visibility, setVisibility] = useState<string>("");
   const [weather, setWeather] = useState<string>("");
@@ -18,8 +20,18 @@ const NewEntryForm = ({ setEntries }: NewEntryFormProps) => {
       .addEntry({ date, visibility, weather, comment })
       .then((newEntry) => {
         setEntries((prev) => [...prev, newEntry]);
+        setDate("");
+        setVisibility("");
+        setWeather("");
+        setComment("");
       })
-      .catch((e) => {
+      .catch((e: unknown) => {
+        if (e instanceof AxiosError) {
+          setNotif(e.response?.data);
+          setTimeout(() => {
+            setNotif(null);
+          }, 5000);
+        }
         console.log(e);
       });
   };

@@ -22,7 +22,11 @@ const DiaryEntry = ({ entry }: DiaryEntryProps) => {
   );
 };
 
-const DiaryEntries = () => {
+interface DiaryEntriesProps {
+  setNotif: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+const DiaryEntries = ({ setNotif }: DiaryEntriesProps) => {
   const [entries, setEntries] = useState<Entry[]>([]);
 
   useEffect(() => {
@@ -32,6 +36,10 @@ const DiaryEntries = () => {
         setEntries(entriesArray);
       })
       .catch((e) => {
+        setNotif("Error: dirary entry fetching failed");
+        setTimeout(() => {
+          setNotif(null);
+        }, 5000);
         console.log(e);
       });
   });
@@ -40,7 +48,7 @@ const DiaryEntries = () => {
 
   return (
     <div>
-      <NewEntryForm setEntries={setEntries}/>
+      <NewEntryForm setEntries={setEntries} setNotif={setNotif}/>
       {entries.map((e) => {
         return <DiaryEntry key={e.id} entry={e} />;
       })}
