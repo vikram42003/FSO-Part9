@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Entry } from "../types";
 
 import diaryEntryService from "../services/diaryEntryService";
+import NewEntryForm from "./NewEntryForm";
 
 interface DiaryEntryProps {
   entry: Entry;
@@ -39,6 +40,7 @@ const DiaryEntries = () => {
 
   return (
     <div>
+      <NewEntryForm setEntries={setEntries}/>
       {entries.map((e) => {
         return <DiaryEntry key={e.id} entry={e} />;
       })}
