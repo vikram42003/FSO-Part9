@@ -1,8 +1,8 @@
 import express, { Response } from "express";
 
-import { NonSensitivePatient } from "../types";
+import { NonSensitivePatient, Patient } from "../types";
 
-import { addPatient, getAllPatients } from "../services/PatientsService";
+import { addPatient, getAllPatients, getPatient } from "../services/PatientsService";
 import { toNewPatient } from "../utility/utils";
 import { z } from "zod";
 
@@ -10,6 +10,15 @@ const router = express.Router();
 
 router.get("/patients", (_req, res: Response<NonSensitivePatient[]>) => {
   res.json(getAllPatients());
+});
+
+router.get("/patients/:id", (req, res: Response<Patient | { error: string }>) => {
+  const patient = getPatient(req.params.id);
+  if (patient) {
+    res.json(patient);
+  } else {
+    res.json({ error: `Error: patient with id ${req.params.id} was not found` });
+  }
 });
 
 router.post("/patients", (req, res) => {
