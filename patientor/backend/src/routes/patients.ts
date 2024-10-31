@@ -33,6 +33,7 @@ router.post("/patients", (req, res) => {
     } else if (e instanceof Error) {
       errorMessage += " Error: " + e.message;
     }
+    console.log("Error happened in POST /api/patients try catch\n", e);
     res.status(400).send(errorMessage);
   }
 });
