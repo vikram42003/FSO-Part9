@@ -1,22 +1,23 @@
 import { SyntheticEvent, useState } from "react";
 import patientsService from "../../services/patients";
-import { EntryType, HealthCheckRating, Patient } from "../../types";
+import { Diagnosis, EntryType, HealthCheckRating, Patient } from "../../types";
 import { Alert, Box, Button, Divider, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { AxiosError } from "axios";
 
 interface AddEntryFormProps {
   patient: Patient | null;
   setPatient: React.Dispatch<React.SetStateAction<Patient | null>>;
+  diagnosis: Diagnosis[];
 }
 
-const AddEntryForm = ({ patient, setPatient }: AddEntryFormProps) => {
+const AddEntryForm = ({ patient, setPatient, diagnosis }: AddEntryFormProps) => {
   const [errorNotif, setErrorNotif] = useState<string>("");
 
   const [formType, setFormType] = useState<EntryType>(EntryType.Hospital);
   const [description, setDesciption] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [specialist, setSpecialist] = useState<string>("");
-  const [diagnosisCodes, setDiagnosisCodes] = useState<string>("");
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
 
   const [dischargeDate, setDischargeDate] = useState<string>("");
   const [criteria, setCriteria] = useState<string>("");
@@ -36,10 +37,13 @@ const AddEntryForm = ({ patient, setPatient }: AddEntryFormProps) => {
         <>
           <TextField
             label="discharge date"
-            placeholder="YYYY-MM-DD"
             required
             fullWidth
             value={dischargeDate}
+            type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
             onChange={(e) => setDischargeDate(e.target.value)}
             sx={{ marginBottom: 2 }}
           />
@@ -67,17 +71,23 @@ const AddEntryForm = ({ patient, setPatient }: AddEntryFormProps) => {
           />
           <TextField
             label="sick leave start date"
-            placeholder="YYYY-MM-DD"
             fullWidth
             value={sickLeaveStart}
+            type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
             onChange={(e) => setSickLeaveStart(e.target.value)}
             sx={{ marginBottom: 2 }}
           />
           <TextField
             label="sick leave end date"
-            placeholder="YYYY-MM-DD"
             fullWidth
             value={sickLeaveEnd}
+            type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
             onChange={(e) => setSickLeaveEnd(e.target.value)}
             sx={{ marginBottom: 2 }}
           />
@@ -120,7 +130,7 @@ const AddEntryForm = ({ patient, setPatient }: AddEntryFormProps) => {
             type: formType,
             specialist,
             description,
-            diagnosisCodes: diagnosisCodes ? diagnosisCodes.split(" ") : undefined,
+            diagnosisCodes: diagnosisCodes ? [...diagnosisCodes] : undefined,
             discharge: {
               date: dischargeDate,
               criteria,
@@ -133,7 +143,7 @@ const AddEntryForm = ({ patient, setPatient }: AddEntryFormProps) => {
             type: formType,
             specialist,
             description,
-            diagnosisCodes: diagnosisCodes ? diagnosisCodes.split(" ") : undefined,
+            diagnosisCodes: diagnosisCodes ? [...diagnosisCodes] : undefined,
             employerName,
             sickLeave:
               sickLeaveStart && sickLeaveEnd ? { startDate: sickLeaveStart, endDate: sickLeaveEnd } : undefined,
@@ -145,7 +155,7 @@ const AddEntryForm = ({ patient, setPatient }: AddEntryFormProps) => {
             type: formType,
             specialist,
             description,
-            diagnosisCodes: diagnosisCodes ? diagnosisCodes.split(" ") : undefined,
+            diagnosisCodes: diagnosisCodes ? [...diagnosisCodes] : undefined,
             healthCheckRating: healthCheck,
           });
           break;
@@ -170,7 +180,7 @@ const AddEntryForm = ({ patient, setPatient }: AddEntryFormProps) => {
     setDesciption("");
     setDate("");
     setSpecialist("");
-    setDiagnosisCodes("");
+    setDiagnosisCodes([]);
     setDischargeDate("");
     setCriteria("");
     setEmployerName("");
@@ -210,10 +220,13 @@ const AddEntryForm = ({ patient, setPatient }: AddEntryFormProps) => {
 
         <TextField
           label="date"
-          placeholder="YYYY-MM-DD"
           required
           fullWidth
           value={date}
+          type="date"
+          InputLabelProps={{
+            shrink: true,
+          }}
           onChange={(e) => setDate(e.target.value)}
           sx={{ marginBottom: 2 }}
         />
@@ -227,13 +240,25 @@ const AddEntryForm = ({ patient, setPatient }: AddEntryFormProps) => {
           sx={{ marginBottom: 2 }}
         />
 
-        <TextField
-          label="diagnosis codes (separated by space)"
+        <InputLabel id="diagnosisCodes">Diagnosis codes</InputLabel>
+        <Select
+          labelId="diagnosisCodes"
+          multiple
           fullWidth
+          label="diag"
+          style={{ marginBottom: "1rem" }}
           value={diagnosisCodes}
-          onChange={(e) => setDiagnosisCodes(e.target.value)}
-          sx={{ marginBottom: 2 }}
-        />
+          // Here 'e' will always be an array because material ui docs say so (link - https://mui.com/material-ui/react-select/#multiple-select)
+          // i would have used the correct type for this case but its not working in an inline arrow fuction and i dont want to create a separate
+          // handler function cause its 3:16 am, i've been at this for like 6 consecutive hours and im tired i wanna get this done and go to sleep :(
+          onChange={(e) => setDiagnosisCodes(e.target.value as string[])}
+        >
+          {diagnosis.map((d) => (
+            <MenuItem key={d.code} value={d.code}>
+              {d.code}: {d.name}
+            </MenuItem>
+          ))}
+        </Select>
 
         {typeSpecificInputFields}
 

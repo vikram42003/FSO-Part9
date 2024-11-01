@@ -32,8 +32,6 @@ const PatientInfoPage = ({ diagnosis }: PatientInfoPageProps) => {
 
   const svg = patient.gender === "male" ? maleSvg : femaleSvg;
 
-  console.log(patient);
-
   return (
     <div>
       <CssBaseline />
@@ -48,7 +46,7 @@ const PatientInfoPage = ({ diagnosis }: PatientInfoPageProps) => {
           <br />
           {patient.dateOfBirth && `Date of Birth: ${patient.dateOfBirth}`}
         </p>
-        <AddEntryForm patient={patient} setPatient={setPatient} />
+        <AddEntryForm diagnosis={diagnosis} patient={patient} setPatient={setPatient} />
         {patient.entries && patient.entries.length > 0 && (
           <EntriesList entries={patient.entries} diagnosis={diagnosis} />
         )}
