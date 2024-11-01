@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Diagnosis, Patient } from "../../types";
-import patients from "../../services/patients";
+import patientsService from "../../services/patients";
 import { useParams } from "react-router-dom";
 import { Container, CssBaseline } from "@mui/material";
 import maleSvg from "../../images/male-symbol-svgrepo-com.svg";
 import femaleSvg from "../../images/female-gender-sign-svgrepo-com.svg";
 import EntriesList from "../EntriesList";
+import AddEntryForm from "../AddEntryForm";
 
 interface PatientInfoPageProps {
   diagnosis: Diagnosis[];
@@ -18,7 +19,7 @@ const PatientInfoPage = ({ diagnosis }: PatientInfoPageProps) => {
   useEffect(() => {
     async function getInfo() {
       if (id) {
-        const data = await patients.get(id);
+        const data = await patientsService.get(id);
         setPatient(data);
       } else {
         console.log("Parameter :id is missing. ID is ", id);
@@ -30,6 +31,8 @@ const PatientInfoPage = ({ diagnosis }: PatientInfoPageProps) => {
   if (!patient) return <div>loading info...</div>;
 
   const svg = patient.gender === "male" ? maleSvg : femaleSvg;
+
+  console.log(patient);
 
   return (
     <div>
@@ -45,6 +48,7 @@ const PatientInfoPage = ({ diagnosis }: PatientInfoPageProps) => {
           <br />
           {patient.dateOfBirth && `Date of Birth: ${patient.dateOfBirth}`}
         </p>
+        <AddEntryForm patient={patient} setPatient={setPatient} />
         {patient.entries && patient.entries.length > 0 && (
           <EntriesList entries={patient.entries} diagnosis={diagnosis} />
         )}

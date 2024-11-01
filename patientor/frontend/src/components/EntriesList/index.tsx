@@ -114,7 +114,14 @@ const EntryItemHealthCheck = ({ entry }: EntryItemHealthCheck) => {
 const EntriesList = ({ entries, diagnosis }: EntriesListProps) => {
   entries = entries.map((entry) => {
     if (entry.diagnosisCodes && diagnosis.length > 0) {
-      entry.diagnosisCodes = entry.diagnosisCodes.map((dc) => `${dc}: ${diagnosis.find((d) => (d.code = dc))?.name}`);
+      entry.diagnosisCodes = entry.diagnosisCodes.map((dc) => {
+        const diag = diagnosis.find((d) => d.code === dc);
+        if (diag) {
+          return `${diag.code}: ${diag.name}`;
+        } else {
+          return dc;
+        }
+      });
     }
     return entry;
   });

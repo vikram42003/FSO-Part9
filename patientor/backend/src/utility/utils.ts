@@ -3,11 +3,11 @@ import z from "zod";
 import { Gender, NewPatient, EntryType, HealthCheckRating, NewEntry } from "../types";
 
 const newPatientSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1),
   dateOfBirth: z.string().date(),
-  ssn: z.string(),
+  ssn: z.string().min(1),
   gender: z.nativeEnum(Gender),
-  occupation: z.string(),
+  occupation: z.string().min(1),
 });
 
 export const toNewPatient = (object: unknown): NewPatient => {
@@ -16,8 +16,8 @@ export const toNewPatient = (object: unknown): NewPatient => {
 
 const EntryBaseSchema = z.object({
   date: z.string().date(),
-  specialist: z.string(),
-  description: z.string(),
+  specialist: z.string().min(1),
+  description: z.string().min(1),
   diagnosisCodes: z.array(z.string()).optional(),
 });
 
@@ -25,13 +25,13 @@ const EntryTypeHospitalSchema = EntryBaseSchema.extend({
   type: z.literal(EntryType.Hospital),
   discharge: z.object({
     date: z.string().date(),
-    criteria: z.string(),
+    criteria: z.string().min(1),
   }),
 });
 
 const EntryTypeOccupationalHealthcareSchema = EntryBaseSchema.extend({
   type: z.literal(EntryType.OccupationalHealthcare),
-  employerName: z.string(),
+  employerName: z.string().min(1),
   sickLeave: z
     .object({
       startDate: z.string().date(),

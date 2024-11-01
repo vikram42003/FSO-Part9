@@ -17,7 +17,7 @@ router.get("/patients/:id", (req, res: Response<Patient | { error: string }>) =>
   if (patient) {
     res.json(patient);
   } else {
-    res.json({ error: `Error: patient with id ${req.params.id} was not found` });
+    res.status(400).json({ error: `Error: patient with id ${req.params.id} was not found` });
   }
 });
 
@@ -38,7 +38,7 @@ router.post("/patients", (req, res) => {
       errorMessage = "something went wrong";
     }
     console.log("ERROR START\n", e, "\nERROR END");
-    res.json({ error: errorMessage });
+    res.status(400).json({ error: errorMessage });
   }
 });
 
@@ -65,7 +65,7 @@ router.post("/patients/:id/entries", (req, res) => {
       errorMessage = "something went wrong";
     }
     console.log("ERROR START\n", e, "\nERROR END");
-    res.json({ error: errorMessage });
+    res.status(400).json({ error: errorMessage });
   }
 });
 
