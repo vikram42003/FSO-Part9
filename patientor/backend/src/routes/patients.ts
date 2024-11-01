@@ -2,8 +2,8 @@ import express, { Response } from "express";
 
 import { NonSensitivePatient, Patient } from "../types";
 
-import { addPatient, getAllPatients, getPatient } from "../services/PatientsService";
-import { toNewPatient } from "../utility/utils";
+import { addEntry, addPatient, getAllPatients, getPatient } from "../services/PatientsService";
+import { toNewEntry, toNewPatient } from "../utility/utils";
 import { z } from "zod";
 
 const router = express.Router();
@@ -27,14 +27,45 @@ router.post("/patients", (req, res) => {
     const addedPatient = addPatient(newPatient);
     res.json(addedPatient);
   } catch (e: unknown) {
-    let errorMessage = "something went wrong";
+    let errorMessage = "";
     if (e instanceof z.ZodError) {
-      errorMessage += " Error: " + e.errors[0].message;
-    } else if (e instanceof Error) {
-      errorMessage += " Error: " + e.message;
+      if (e.issues[0].message === "Required") {
+        errorMessage += ` Error: '${e.issues[0].path}' field is required`;
+      } else {
+        errorMessage += ` Error: ${e.issues[0].message} for '${e.issues[0].path}' field`;
+      }
+    } else {
+      errorMessage = "something went wrong";
     }
-    console.log("Error happened in POST /api/patients try catch\n", e);
-    res.status(400).send(errorMessage);
+    console.log("ERROR START\n", e, "\nERROR END");
+    res.json({ error: errorMessage });
+  }
+});
+
+router.post("/patients/:id/entries", (req, res) => {
+  const id = req.params.id;
+
+  if (!getPatient(id)) {
+    res.json({ error: `patient with id '${id}' was not found on the server` });
+  }
+
+  try {
+    const newEntry = toNewEntry(req.body);
+    const entryToReturn = addEntry(id, newEntry);
+    res.json(entryToReturn);
+  } catch (e) {
+    let errorMessage = "";
+    if (e instanceof z.ZodError) {
+      if (e.issues[0].message === "Required") {
+        errorMessage += ` Error: '${e.issues[0].path}' field is required`;
+      } else {
+        errorMessage += ` Error: ${e.issues[0].message} for '${e.issues[0].path}' field`;
+      }
+    } else {
+      errorMessage = "something went wrong";
+    }
+    console.log("ERROR START\n", e, "\nERROR END");
+    res.json({ error: errorMessage });
   }
 });
 
