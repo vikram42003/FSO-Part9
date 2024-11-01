@@ -1,12 +1,12 @@
 import express, { Response } from "express";
 
-import { Diagnoses } from "../types";
+import { Diagnosis } from "../types";
 
-import { getDiagnosesData } from "../services/diagnosesService";
+import { getDiagnosesData } from "../services/diagnosisService";
 
 const router = express.Router();
 
-router.get("/diagnoses", (_req, res: Response<Diagnoses[]>) => {
+router.get("/diagnoses", (_req, res: Response<Diagnosis[]>) => {
   res.json(getDiagnosesData());
 });
 
