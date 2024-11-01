@@ -45,7 +45,9 @@ const PatientInfoPage = ({ diagnosis }: PatientInfoPageProps) => {
           <br />
           {patient.dateOfBirth && `Date of Birth: ${patient.dateOfBirth}`}
         </p>
-        {patient.entries && <EntriesList entries={patient.entries} diagnosis={diagnosis} />}
+        {patient.entries && patient.entries.length > 0 && (
+          <EntriesList entries={patient.entries} diagnosis={diagnosis} />
+        )}
       </Container>
     </div>
   );

@@ -16,7 +16,7 @@ const App = () => {
   const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
 
   useEffect(() => {
-    void axios.get<void>(`${apiBaseUrl}/ping`);
+    axios.get<void>(`${apiBaseUrl}/ping`);
 
     const fetchInfo = async () => {
       try {
@@ -28,7 +28,7 @@ const App = () => {
         console.log("Could not fetch patient and diagnosis data\n", e);
       }
     };
-    void fetchInfo();
+    fetchInfo();
   }, []);
 
   return (

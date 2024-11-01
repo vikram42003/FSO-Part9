@@ -32,18 +32,18 @@ interface EntryBase {
   diagnosisCodes?: Array<Diagnosis["code"]>;
 }
 
-interface EntryTypeHospital extends EntryBase {
+export interface EntryTypeHospital extends EntryBase {
   type: EntryType.Hospital;
   discharge: { date: string; criteria: string };
 }
 
-interface EntryTypeOccupationalHealthcare extends EntryBase {
+export interface EntryTypeOccupationalHealthcare extends EntryBase {
   type: EntryType.OccupationalHealthcare;
   employerName: string;
   sickLeave?: { startDate: string; endDate: string };
 }
 
-interface EntryTypeHealthCheck extends EntryBase {
+export interface EntryTypeHealthCheck extends EntryBase {
   type: EntryType.HealthCheck;
   healthCheckRating: HealthCheckRating;
 }
