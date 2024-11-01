@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Patient } from "../../types";
+import { Diagnosis, Patient } from "../../types";
 import patients from "../../services/patients";
 import { useParams } from "react-router-dom";
 import { Container, CssBaseline } from "@mui/material";
@@ -7,7 +7,11 @@ import maleSvg from "../../images/male-symbol-svgrepo-com.svg";
 import femaleSvg from "../../images/female-gender-sign-svgrepo-com.svg";
 import EntriesList from "../EntriesList";
 
-const PatientInfoPage = () => {
+interface PatientInfoPageProps {
+  diagnosis: Diagnosis[];
+}
+
+const PatientInfoPage = ({ diagnosis }: PatientInfoPageProps) => {
   const [patient, setPatient] = useState<Patient | null>(null);
   const { id } = useParams<string>();
 
@@ -41,7 +45,7 @@ const PatientInfoPage = () => {
           <br />
           {patient.dateOfBirth && `Date of Birth: ${patient.dateOfBirth}`}
         </p>
-        {patient.entries && <EntriesList entries={patient.entries} />}
+        {patient.entries && <EntriesList entries={patient.entries} diagnosis={diagnosis} />}
       </Container>
     </div>
   );

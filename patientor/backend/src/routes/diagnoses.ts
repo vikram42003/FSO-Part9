@@ -6,7 +6,7 @@ import { getDiagnosesData } from "../services/diagnosisService";
 
 const router = express.Router();
 
-router.get("/diagnoses", (_req, res: Response<Diagnosis[]>) => {
+router.get("/diagnosis", (_req, res: Response<Diagnosis[]>) => {
   res.json(getDiagnosesData());
 });
 

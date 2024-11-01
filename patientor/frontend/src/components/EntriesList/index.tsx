@@ -1,18 +1,22 @@
-import { Entry } from "../../types";
+import { Diagnosis, Entry } from "../../types";
 
 interface EntryItemProps {
   entry: Entry;
+  diagnosis: Diagnosis[];
 }
 
 interface EntriesListProps {
   entries: Entry[];
+  diagnosis: Diagnosis[];
 }
 
-const EntryItem = ({ entry }: EntryItemProps) => {
+const EntryItem = ({ entry, diagnosis }: EntryItemProps) => {
   const diagnosisCodesList = entry.diagnosisCodes ? (
     <ul>
       {entry.diagnosisCodes.map((d) => (
-        <li key={d}>{d}</li>
+        <li key={d}>
+          {d}: {diagnosis.find((diag) => diag.code === d)?.name}
+        </li>
       ))}
     </ul>
   ) : null;
@@ -27,13 +31,13 @@ const EntryItem = ({ entry }: EntryItemProps) => {
   );
 };
 
-const EntriesList = ({ entries }: EntriesListProps) => {
+const EntriesList = ({ entries, diagnosis }: EntriesListProps) => {
   return (
     <div>
       <h3>entries</h3>
-      {entries.map((e) => (
-        <EntryItem key={e.id} entry={e} />
-      ))}
+      {entries.map((e) => {
+        return <EntryItem key={e.id} entry={e} diagnosis={diagnosis} />;
+      })}
     </div>
   );
 };
